@@ -57,14 +57,12 @@ def apply_cloak_effect(frame, initial_frame):
     Upperbound = np.array([hh, sh, vh])  # Set the upper bound HSV values
     Lowerbound = np.array([hl, sl, vl])  # Set the lower bound HSV values
     
-    # Create a mask that isolates the cloak color 
-    # Invert the mask to isolate the background 
-    # Apply the cloak effect by keeping only the cloak areas from the initial background     
-    # Keep only the background areas from the current frame 
-    # Combine the cloak and background to create the final output 
-    ##YOUR CODE STARTS HERE ........
+    mask = cv2.inRange(frame, Lowerbound, Upperbound)##First error is here somewhere
+    inversemsk = cv2.bitwise_not(mask)
     
-    ##YOUR CODE ENDS HERE
+    cloak = cv2.bitwise_or(initial_frame, initial_frame, mask=mask)#2nd
+    background = cv2.bitwise_xor(frame, frame, mask=inversemsk)#3rd
+    final = cv2.bitwise_or(cloak, background)
     return cloak, background, final
 
 
@@ -82,6 +80,3 @@ while True:
         break
 
 cam.release()
-
-# Uncomment the following line to run the program
-# create_trackbars()
